@@ -1,0 +1,63 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+urls = {
+    'https://blog.fluidity.money/fluidity-a-good-deal-for-liquidity-providers-400dcb7aed44',
+    'https://blog.fluidity.money/fluidity-launches-on-arbitrum-baa96c797ef2',
+    'https://blog.fluidity.money/governance-and-fluidity-wars-steering-the-invisible-hand-e5a71afb2757',
+    'https://blog.fluidity.money/fluidity-university-part-3-utility-mining-a-fairer-token-distribution-strategy-4008323aa1bb',
+    'https://blog.fluidity.money/introducing-fluidity-f201a0edc4c8',
+    'https://blog.fluidity.money/buckle-up-rodeo-finance-joins-the-atlantean-embassy-c9bf74f5a4c',
+    'https://blog.fluidity.money/crescentswap-joins-the-atlantean-embassy-strengthening-the-deep-45a8eb625ca5',
+    'https://blog.fluidity.money/fluidity-welcomes-meson-to-the-embassy-advancing-cross-chain-swaps-together-719807e256e2',
+    'https://blog.fluidity.money/paying-bills-will-pay-the-bills-fluidity-money-partners-with-request-finance-5002ec28eeea',
+    'https://blog.fluidity.money/fluidity-using-chainlink-vrf-to-power-the-future-of-money-11882c51ae89',
+    'https://blog.fluidity.money/attention-all-fluiders-fluidity-testnet-v1-is-live-ff85fa86d042',
+    'https://blog.fluidity.money/fluidity-solana-devnet-beta-is-live-751918993eb0',
+    'https://blog.fluidity.money/fluidity-university-part-1-how-does-fluidity-protect-itself-against-frudulent-transactions-8dc39b4f5672',
+    'https://blog.fluidity.money/fluidity-university-part-2-distributing-yield-through-the-transfer-reward-function-b34941ec8f7e',
+    'https://blog.fluidity.money/fluidity-x-uxd-the-future-of-stablecoins-73766ff772c8',
+    'https://blog.fluidity.money/primer-on-stablecoins-lessons-from-ust-collapse-stablecoins-need-utility-75bde4dca57f',
+    'https://blog.fluidity.money/fluidity-x-makerdao-tiki-talk-rethinking-the-stablecoin-paradigm-afed6912d0f6',
+    'https://blog.fluidity.money/ghost-in-the-machine-fluidity-partners-with-aave-a217e65ab72b',
+    'https://blog.fluidity.money/tiki-talk-minutes-fluidity-x-dopex-x-arbitrum-and-the-evolving-boundaries-of-defi-ea7f1110f741',
+    'https://blog.fluidity.money/an-alternative-solution-to-uniswaps-fee-switch-problem-61a5e4f6057c',
+    'https://blog.fluidity.money/the-hunting-of-the-zk-snark-homomorphic-hidings-aa6c7824597',
+    'https://blog.fluidity.money/with-fluidity-supercharge-your-arbitrage-trades-f0b956622e9e',
+    'https://blog.fluidity.money/fluidity-announces-1-3-million-seed-round-led-by-multicoin-capital-943ee3fbe0e6',
+    'https://blog.fluidity.money/payments-metaverse-p2e-games-and-defi-derivatives-a-deep-dive-into-fluiditys-use-cases-767910d6a39c',
+    'https://blog.fluidity.money/fluidity-launches-on-mainnet-introducing-a-new-defi-primitive-that-rewards-users-for-spending-c9002584f64b',
+    'https://blog.fluidity.money/the-atlantean-embassy-emerges-5f77fc89fa24',
+    'https://blog.fluidity.money/saddle-finance-joins-the-atlantean-embassy-382cfa272e78',
+    'https://blog.fluidity.money/fluidity-money-welcomes-factordao-into-the-atlantean-embassy-2ab649f7b691',
+    'https://blog.fluidity.money/gains-network-joins-atlantean-embassy-and-partners-with-fluidity-money-9cb90cfd84f7'
+}
+
+def get_article_data(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    date_element = soup.find('meta', property='article:published_time')
+    if date_element:
+        date = date_element.get('content')
+    else:
+        date = None
+        
+    title_element = soup.find('h1')
+    title = title_element.text if title_element else ''
+    
+    return {
+        'url': url,
+        'title': title,
+        'date': date
+    }
+
+data = []
+
+for url in urls:
+    article_data = get_article_data(url)
+    data.append(article_data)
+
+df = pd.DataFrame(data)
+print(df)
